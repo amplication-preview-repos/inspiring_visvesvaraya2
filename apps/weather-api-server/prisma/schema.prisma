@@ -1,0 +1,44 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model City {
+  country        String?
+  createdAt      DateTime        @default(now())
+  forecasts      Forecast[]
+  id             String          @id @default(cuid())
+  latitude       Float?
+  longitude      Float?
+  name           String?
+  updatedAt      DateTime        @updatedAt
+  weatherReports WeatherReport[]
+}
+
+model WeatherReport {
+  city        City?     @relation(fields: [cityId], references: [id])
+  cityId      String?
+  createdAt   DateTime  @default(now())
+  humidity    Int?
+  id          String    @id @default(cuid())
+  reportTime  DateTime?
+  temperature Float?
+  updatedAt   DateTime  @updatedAt
+  windSpeed   Float?
+}
+
+model Forecast {
+  city         City?     @relation(fields: [cityId], references: [id])
+  cityId       String?
+  createdAt    DateTime  @default(now())
+  forecastTime DateTime?
+  humidity     Int?
+  id           String    @id @default(cuid())
+  temperature  Float?
+  updatedAt    DateTime  @updatedAt
+  windSpeed    Float?
+}
